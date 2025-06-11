@@ -1,0 +1,6 @@
+RNF01: Yo como sistema requiero procesar solicitudes de contratación con capacidad para 50 usuarios concurrentes para mantener un rendimiento óptimo sin degradación.
+RNF02: Yo como sistema requiero implementar mecanismos de autenticación con métodos seguros de verificación de identidad para proteger los datos sensibles de usuarios y empresa.
+RNF03: Yo como sistema requiero funcionar correctamente con compatibilidad en todos los navegadores web activos para permitir el acceso global a los usuarios.
+RNF04: Yo como sistema requiero realizar copias de seguridad con procesos automáticos nocturnos de frecuencia diaria para garantizar la integridad y evitar pérdidas de datos.
+RNF05: Yo como sistema requiero exportar reportes generados con conversión a formato PDF para facilitar la distribución y lectura de información.
+RNF06: Yo como sistema requiero gestionar datos con una base de datos PostgreSQL de 5GB de almacenamiento, capacidad de 100 millones de lecturas y 10 millones de escrituras mensuales para soportar el volumen de operaciones requerido.
