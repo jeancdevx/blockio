@@ -4,7 +4,6 @@ import { useState } from 'react'
 
 import Image from 'next/image'
 import Link from 'next/link'
-import { useRouter } from 'next/navigation'
 
 import { OctagonAlertIcon } from 'lucide-react'
 
@@ -34,8 +33,6 @@ const formSchema = z.object({
 })
 
 const SignInView = () => {
-  const router = useRouter()
-
   const [error, setError] = useState<string | null>(null)
   const [isPending, setIsPending] = useState(false)
 
@@ -47,54 +44,53 @@ const SignInView = () => {
     }
   })
 
-  const onSubmit = (data: z.infer<typeof formSchema>) => {
-    setError(null)
-    setIsPending(true)
+  const onSubmit = async (data: z.infer<typeof formSchema>) => {
+    try {
+      setIsPending(true)
+      setError(null)
 
-    authClient.signIn.email(
-      {
+      const { error } = await authClient.signIn.email({
         email: data.email,
         password: data.password,
         callbackURL: '/empleos'
-      },
-      {
-        onSuccess: () => {
-          router.push('/empleos')
-        },
-        onError: error => {
-          console.log(error)
+      })
 
-          setError(error.error.message)
-        },
-        onResponse: () => {
-          setIsPending(false)
-        }
+      if (error) {
+        setError(error.message ?? 'Unknown error')
       }
-    )
+    } catch (error) {
+      setError(
+        'Error al iniciar sesión. Por favor, inténtalo de nuevo más tarde.' +
+          error
+      )
+    } finally {
+      setIsPending(false)
+    }
   }
 
-  const onSocial = (provider: 'google' | 'github') => {
-    setError(null)
-    setIsPending(true)
+  const onSocial = async (provider: 'google' | 'github') => {
+    try {
+      setIsPending(true)
+      setError(null)
 
-    authClient.signIn.social(
-      {
+      const { error } = await authClient.signIn.social({
         provider,
         callbackURL: '/empleos'
-      },
-      {
-        onSuccess: () => {
-          router.push('/empleos')
-        },
-        onError: ({ error }) => {
-          setError(error.message)
-          setIsPending(false)
-        },
-        onResponse: () => {
-          setIsPending(false)
-        }
+      })
+
+      if (error) {
+        setError(error.message ?? 'Unknown error')
       }
-    )
+    } catch (error) {
+      setError(
+        'Error al iniciar sesión con ' +
+          provider +
+          '. Por favor, inténtalo de nuevo más tarde.' +
+          error
+      )
+    } finally {
+      setIsPending(false)
+    }
   }
 
   return (
@@ -153,6 +149,15 @@ const SignInView = () => {
                       </FormItem>
                     )}
                   />
+
+                  <div className='flex justify-end'>
+                    <Link
+                      href='/forgot-account'
+                      className='text-xs font-medium text-emerald-600 underline-offset-4 hover:underline'
+                    >
+                      ¿Olvidaste tu contraseña?
+                    </Link>
+                  </div>
                 </div>
 
                 {!!error && (
