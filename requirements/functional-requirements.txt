@@ -3,14 +3,16 @@ RF01: Yo como usuario requiero registrarme con nombre de usuario, correo electr�
 RF02: Yo como usuario requiero iniciar sesión con correo electrónico y contraseña para poder postularme a ofertas laborales
 RF03: Yo como usuario requiero recuperar mi contraseña con un código de autenticación para poder acceder a mi cuenta
 RF04: Yo como usuario requiero administrar mi cuenta para poder actualizar mi información personal
+RF05: Yo como usuario requiero cerrar sesión para proteger mi cuenta y datos personales
 
 Postulante
 RF01: Yo como postulante requiero ver la lista de ofertas laborales activas con título del puesto, área, tipo de trabajo, ubicación, salario y fecha de vencimiento para poder informarme sobre las oportunidades laborales
 RF02: Yo como postulante requiero filtrar las ofertas laborales por área, tipo de trabajo, ubicación y salario para poder encontrar ofertas que se ajusten a mis necesidades
 RF03: Yo como postulante requiero ver los detalles de una oferta laboral con titulo del puesto, área, tipo de trabajo, ubicación, salario, candidatos requeridos, fecha de vencimiento, descripción del puesto, requisitos del puesto, beneficios y evaluaciones para poder evaluar si me interesa postularme
 RF04: Yo como postulante requiero postularme a una oferta laboral con mi CV para que se pueda evaluar mi candidatura
-RF05: Yo como postulante requiero adjuntar mi cv en formato PDF para que se pueda evaluar mi candidatura
-RF06: Yo como postulante requiero ver el estado de mi postulación en todo el proceso de selección para saber si fui seleccionado, rechazado o si mi postulación está en evaluación
+RF05: Yo como postulante requiero cancelar mi postulación a una oferta laboral
+RF06: Yo como postulante requiero adjuntar mi cv en formato PDF para que se pueda evaluar mi candidatura
+RF07: Yo como postulante requiero ver el estado de mi postulación en todo el proceso de selección para saber si fui seleccionado, rechazado o si mi postulación está en evaluación
 
 RRHH:
 RF01: Yo como RRHH requiero crear las áreas que existen en la empresa con el nombre del área para asociarlas a las ofertas laborales
