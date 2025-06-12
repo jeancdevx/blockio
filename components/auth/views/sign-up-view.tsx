@@ -10,6 +10,7 @@ import { OctagonAlertIcon } from 'lucide-react'
 
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
+import { FaGithub, FaGoogle } from 'react-icons/fa'
 import { z } from 'zod'
 
 import { authClient } from '@/lib/auth-client'
@@ -56,11 +57,36 @@ export const SignUpView = () => {
       {
         name: data.name,
         email: data.email,
-        password: data.password
+        password: data.password,
+        callbackURL: '/empleos'
       },
       {
         onSuccess: () => {
-          router.push('/')
+          router.push('/empleos')
+        },
+        onError: ({ error }) => {
+          setError(error.message)
+          setIsPending(false)
+        },
+        onResponse: () => {
+          setIsPending(false)
+        }
+      }
+    )
+  }
+
+  const onSocial = (provider: 'google' | 'github') => {
+    setError(null)
+    setIsPending(true)
+
+    authClient.signIn.social(
+      {
+        provider,
+        callbackURL: '/empleos'
+      },
+      {
+        onSuccess: () => {
+          router.push('/empleos')
         },
         onError: ({ error }) => {
           setError(error.message)
@@ -174,20 +200,24 @@ export const SignUpView = () => {
 
                 <div className='grid grid-cols-2 gap-4'>
                   <Button
-                    variant='outline'
+                    variant='google'
                     type='button'
                     className='w-full'
                     disabled={isPending}
+                    onClick={() => onSocial('google')}
                   >
+                    <FaGoogle className='mr-2 size-4' />
                     Google
                   </Button>
 
                   <Button
-                    variant='outline'
+                    variant='github'
                     type='button'
                     className='w-full'
                     disabled={isPending}
+                    onClick={() => onSocial('github')}
                   >
+                    <FaGithub className='mr-2 size-4' />
                     Github
                   </Button>
                 </div>
