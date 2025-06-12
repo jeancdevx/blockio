@@ -217,7 +217,7 @@ const SignInView = () => {
 
           <div className='relative hidden flex-col items-center justify-center gap-y-4 bg-radial from-emerald-700 to-emerald-900 md:flex'>
             <Image src='./logo.svg' alt='Meet AI' width={64} height={64} />
-            <p className='text-2xl font-semibold text-white'>BlockITO</p>
+            <p className='text-2xl font-semibold text-white'>BlockIO</p>
           </div>
         </CardContent>
       </Card>
