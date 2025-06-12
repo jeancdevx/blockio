@@ -1,4 +1,55 @@
-import { boolean, pgTable, text, timestamp } from 'drizzle-orm/pg-core'
+import { relations } from 'drizzle-orm'
+import {
+  boolean,
+  decimal,
+  integer,
+  pgEnum,
+  pgTable,
+  text,
+  timestamp,
+  uuid
+} from 'drizzle-orm/pg-core'
+
+export const userRoleEnum = pgEnum('user_role_enum', [
+  'admin',
+  'rrhh',
+  'postulante'
+])
+
+export const jobOfferEnum = pgEnum('job_offer_enum', [
+  'tiempo_completo',
+  'medio_tiempo',
+  'contrato',
+  'practicas'
+])
+
+export const jobOfferStatusEnum = pgEnum('job_offer_status_enum', [
+  'activa',
+  'vencida',
+  'cancelada',
+  'finalizada'
+])
+
+export const jobApplicationStatusEnum = pgEnum('job_application_status_enum', [
+  'cv_enviado',
+  'cv_en_revision',
+  'cv_aprobado',
+  'cv_rechazado',
+  'entrevista_solicitada',
+  'entrevista_realizada',
+  'entrevista_calificada',
+  'evaluacion_en_curso',
+  'evaluacion_completada',
+  'evaluacion_calificada',
+  'seleccionado',
+  'rechazado'
+])
+
+export const evaluationTypeEnum = pgEnum('evaluation_type_enum', [
+  'fisica',
+  'psicologica',
+  'aptitud'
+])
 
 export const user = pgTable('user', {
   id: text('id').primaryKey(),
@@ -8,6 +59,7 @@ export const user = pgTable('user', {
     .$defaultFn(() => false)
     .notNull(),
   image: text('image'),
+  role: userRoleEnum('role').default('postulante').notNull(),
   createdAt: timestamp('created_at')
     .$defaultFn(() => /* @__PURE__ */ new Date())
     .notNull(),
@@ -59,3 +111,230 @@ export const verification = pgTable('verification', {
     () => /* @__PURE__ */ new Date()
   )
 })
+
+export const cv = pgTable('cv', {
+  id: uuid('id').primaryKey(),
+  userId: text('user_id')
+    .notNull()
+    .references(() => user.id, { onDelete: 'cascade' }),
+  fileName: text('file_name').notNull(),
+  fileUrl: text('file_url').notNull(),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+  updatedAt: timestamp('updated_at').defaultNow().notNull()
+})
+
+export const area = pgTable('area', {
+  id: uuid('id').primaryKey(),
+  name: text('name').notNull(),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+  updatedAt: timestamp('updated_at').defaultNow().notNull()
+})
+
+export const jobOffer = pgTable('job_offer', {
+  id: uuid('id').primaryKey(),
+  title: text('title').notNull(),
+  description: text('description').notNull(),
+  salary: decimal('salary', { precision: 10, scale: 2 }),
+  location: text('location').notNull(),
+  workType: jobOfferEnum('work_type').notNull(),
+  maxSelectedCandidates: integer('max_selected_candidates')
+    .default(1)
+    .notNull(),
+  areaId: uuid('area_id')
+    .notNull()
+    .references(() => area.id, { onDelete: 'cascade' }),
+  expiresAt: timestamp('expires_at').notNull(),
+  status: jobOfferStatusEnum('status').notNull(),
+  userId: text('user_id')
+    .notNull()
+    .references(() => user.id, { onDelete: 'cascade' }),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+  updatedAt: timestamp('updated_at').defaultNow().notNull()
+})
+
+export const jobRequirement = pgTable('job_requirement', {
+  id: uuid('id').primaryKey(),
+  jobOfferId: uuid('job_offer_id')
+    .notNull()
+    .references(() => jobOffer.id, { onDelete: 'cascade' }),
+  requirement: text('requirement').notNull(),
+  isRequired: boolean('is_required').default(true).notNull(),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+  updatedAt: timestamp('updated_at').defaultNow().notNull()
+})
+
+export const jobBenefit = pgTable('job_benefit', {
+  id: uuid('id').primaryKey(),
+  jobOfferId: uuid('job_offer_id')
+    .notNull()
+    .references(() => jobOffer.id, { onDelete: 'cascade' }),
+  benefit: text('benefit').notNull(),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+  updatedAt: timestamp('updated_at').defaultNow().notNull()
+})
+
+export const jobApplication = pgTable('job_application', {
+  id: uuid('id').primaryKey(),
+  jobOfferId: uuid('job_offer_id')
+    .notNull()
+    .references(() => jobOffer.id, { onDelete: 'cascade' }),
+  userId: text('user_id')
+    .notNull()
+    .references(() => user.id, { onDelete: 'cascade' }),
+  cvId: uuid('cv_id')
+    .notNull()
+    .references(() => cv.id, { onDelete: 'cascade' }),
+  status: jobApplicationStatusEnum('status').notNull(),
+  cvReviewedAt: timestamp('cv_reviewed_at'),
+  isSelected: boolean('is_selected').default(false).notNull(),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+  updatedAt: timestamp('updated_at').defaultNow().notNull()
+})
+
+export const interview = pgTable('interview', {
+  id: uuid('id').primaryKey(),
+  jobApplicationId: uuid('job_application_id')
+    .notNull()
+    .references(() => jobApplication.id, { onDelete: 'cascade' }),
+  scheduledAt: timestamp('scheduled_at').notNull(),
+  status: jobApplicationStatusEnum('status').notNull(),
+  score: decimal('score', { precision: 5, scale: 2 }),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+  updatedAt: timestamp('updated_at').defaultNow().notNull()
+})
+
+export const evaluation = pgTable('evaluation', {
+  id: uuid('id').primaryKey(),
+  interviewId: uuid('interview_id')
+    .notNull()
+    .references(() => interview.id, { onDelete: 'cascade' }),
+  type: evaluationTypeEnum('type').notNull(),
+  weight: decimal('weight', { precision: 5, scale: 2 }),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+  updatedAt: timestamp('updated_at').defaultNow().notNull()
+})
+
+export const result = pgTable('evaluation_result', {
+  id: uuid('id').primaryKey(),
+  evaluationId: uuid('evaluation_id')
+    .notNull()
+    .references(() => evaluation.id, { onDelete: 'cascade' }),
+  interviewId: uuid('interview_id')
+    .notNull()
+    .references(() => interview.id, { onDelete: 'cascade' }),
+  score: decimal('score', { precision: 5, scale: 2 }),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+  updatedAt: timestamp('updated_at').defaultNow().notNull()
+})
+
+export const areaRelation = relations(area, ({ many }) => ({
+  jobOffers: many(jobOffer)
+}))
+
+export const jobOfferRelation = relations(jobOffer, ({ one, many }) => ({
+  user: one(user, {
+    fields: [jobOffer.userId],
+    references: [user.id]
+  }),
+  area: one(area, {
+    fields: [jobOffer.areaId],
+    references: [area.id]
+  }),
+  requirements: many(jobRequirement),
+  benefits: many(jobBenefit),
+  applications: many(jobApplication)
+}))
+
+export const jobRequirementRelation = relations(jobRequirement, ({ one }) => ({
+  jobOffer: one(jobOffer, {
+    fields: [jobRequirement.jobOfferId],
+    references: [jobOffer.id]
+  })
+}))
+
+export const jobBenefitRelation = relations(jobBenefit, ({ one }) => ({
+  jobOffer: one(jobOffer, {
+    fields: [jobBenefit.jobOfferId],
+    references: [jobOffer.id]
+  })
+}))
+
+export const userRelation = relations(user, ({ one, many }) => ({
+  cv: one(cv, {
+    fields: [user.id],
+    references: [cv.userId]
+  }),
+  sessions: many(session),
+  accounts: many(account),
+  jobApplications: many(jobApplication),
+  jobOffers: many(jobOffer)
+}))
+
+export const cvRelation = relations(cv, ({ one, many }) => ({
+  user: one(user, {
+    fields: [cv.userId],
+    references: [user.id]
+  }),
+  applications: many(jobApplication)
+}))
+
+export const jobApplicationRelation = relations(
+  jobApplication,
+  ({ one, many }) => ({
+    user: one(user, {
+      fields: [jobApplication.userId],
+      references: [user.id]
+    }),
+    jobOffer: one(jobOffer, {
+      fields: [jobApplication.jobOfferId],
+      references: [jobOffer.id]
+    }),
+    cv: one(cv, {
+      fields: [jobApplication.cvId],
+      references: [cv.id]
+    }),
+    interviews: many(interview)
+  })
+)
+
+export const interviewRelation = relations(interview, ({ one, many }) => ({
+  jobApplication: one(jobApplication, {
+    fields: [interview.jobApplicationId],
+    references: [jobApplication.id]
+  }),
+  evaluations: many(evaluation),
+  results: many(result)
+}))
+
+export const evaluationRelation = relations(evaluation, ({ one, many }) => ({
+  interview: one(interview, {
+    fields: [evaluation.interviewId],
+    references: [interview.id]
+  }),
+  results: many(result)
+}))
+
+export const resultRelation = relations(result, ({ one }) => ({
+  evaluation: one(evaluation, {
+    fields: [result.evaluationId],
+    references: [evaluation.id]
+  }),
+  interview: one(interview, {
+    fields: [result.interviewId],
+    references: [interview.id]
+  })
+}))
+
+export const sessionRelation = relations(session, ({ one }) => ({
+  user: one(user, {
+    fields: [session.userId],
+    references: [user.id]
+  })
+}))
+
+export const accountRelation = relations(account, ({ one }) => ({
+  user: one(user, {
+    fields: [account.userId],
+    references: [user.id]
+  })
+}))
