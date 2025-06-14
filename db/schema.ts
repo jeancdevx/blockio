@@ -198,7 +198,6 @@ export const interview = pgTable('interview', {
     .references(() => jobApplication.id, { onDelete: 'cascade' }),
   scheduledAt: timestamp('scheduled_at').notNull(),
   status: jobApplicationStatusEnum('status').notNull(),
-  score: decimal('score', { precision: 5, scale: 2 }),
   createdAt: timestamp('created_at').defaultNow().notNull(),
   updatedAt: timestamp('updated_at').defaultNow().notNull()
 })
@@ -223,9 +222,43 @@ export const result = pgTable('evaluation_result', {
     .notNull()
     .references(() => interview.id, { onDelete: 'cascade' }),
   score: decimal('score', { precision: 5, scale: 2 }),
+  comment: text('comment'),
   createdAt: timestamp('created_at').defaultNow().notNull(),
   updatedAt: timestamp('updated_at').defaultNow().notNull()
 })
+
+export const userRelation = relations(user, ({ one, many }) => ({
+  cv: one(cv, {
+    fields: [user.id],
+    references: [cv.userId]
+  }),
+  sessions: many(session),
+  accounts: many(account),
+  jobApplications: many(jobApplication),
+  jobOffers: many(jobOffer)
+}))
+
+export const sessionRelation = relations(session, ({ one }) => ({
+  user: one(user, {
+    fields: [session.userId],
+    references: [user.id]
+  })
+}))
+
+export const accountRelation = relations(account, ({ one }) => ({
+  user: one(user, {
+    fields: [account.userId],
+    references: [user.id]
+  })
+}))
+
+export const cvRelation = relations(cv, ({ one, many }) => ({
+  user: one(user, {
+    fields: [cv.userId],
+    references: [user.id]
+  }),
+  applications: many(jobApplication)
+}))
 
 export const areaRelation = relations(area, ({ many }) => ({
   jobOffers: many(jobOffer)
@@ -259,25 +292,6 @@ export const jobBenefitRelation = relations(jobBenefit, ({ one }) => ({
   })
 }))
 
-export const userRelation = relations(user, ({ one, many }) => ({
-  cv: one(cv, {
-    fields: [user.id],
-    references: [cv.userId]
-  }),
-  sessions: many(session),
-  accounts: many(account),
-  jobApplications: many(jobApplication),
-  jobOffers: many(jobOffer)
-}))
-
-export const cvRelation = relations(cv, ({ one, many }) => ({
-  user: one(user, {
-    fields: [cv.userId],
-    references: [user.id]
-  }),
-  applications: many(jobApplication)
-}))
-
 export const jobApplicationRelation = relations(
   jobApplication,
   ({ one, many }) => ({
@@ -306,12 +320,12 @@ export const interviewRelation = relations(interview, ({ one, many }) => ({
   results: many(result)
 }))
 
-export const evaluationRelation = relations(evaluation, ({ one, many }) => ({
+export const evaluationRelation = relations(evaluation, ({ one }) => ({
   interview: one(interview, {
     fields: [evaluation.interviewId],
     references: [interview.id]
   }),
-  results: many(result)
+  results: one(result)
 }))
 
 export const resultRelation = relations(result, ({ one }) => ({
@@ -322,19 +336,5 @@ export const resultRelation = relations(result, ({ one }) => ({
   interview: one(interview, {
     fields: [result.interviewId],
     references: [interview.id]
-  })
-}))
-
-export const sessionRelation = relations(session, ({ one }) => ({
-  user: one(user, {
-    fields: [session.userId],
-    references: [user.id]
-  })
-}))
-
-export const accountRelation = relations(account, ({ one }) => ({
-  user: one(user, {
-    fields: [account.userId],
-    references: [user.id]
   })
 }))
