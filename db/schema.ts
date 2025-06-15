@@ -158,7 +158,6 @@ export const jobRequirement = pgTable('job_requirement', {
     .notNull()
     .references(() => jobOffer.id, { onDelete: 'cascade' }),
   requirement: text('requirement').notNull(),
-  isRequired: boolean('is_required').default(true).notNull(),
   createdAt: timestamp('created_at').defaultNow().notNull(),
   updatedAt: timestamp('updated_at').defaultNow().notNull()
 })
@@ -198,6 +197,7 @@ export const interview = pgTable('interview', {
     .references(() => jobApplication.id, { onDelete: 'cascade' }),
   scheduledAt: timestamp('scheduled_at').notNull(),
   status: jobApplicationStatusEnum('status').notNull(),
+  score: decimal('score', { precision: 5, scale: 2 }),
   createdAt: timestamp('created_at').defaultNow().notNull(),
   updatedAt: timestamp('updated_at').defaultNow().notNull()
 })
@@ -209,20 +209,7 @@ export const evaluation = pgTable('evaluation', {
     .references(() => interview.id, { onDelete: 'cascade' }),
   type: evaluationTypeEnum('type').notNull(),
   weight: decimal('weight', { precision: 5, scale: 2 }),
-  createdAt: timestamp('created_at').defaultNow().notNull(),
-  updatedAt: timestamp('updated_at').defaultNow().notNull()
-})
-
-export const result = pgTable('evaluation_result', {
-  id: uuid('id').primaryKey(),
-  evaluationId: uuid('evaluation_id')
-    .notNull()
-    .references(() => evaluation.id, { onDelete: 'cascade' }),
-  interviewId: uuid('interview_id')
-    .notNull()
-    .references(() => interview.id, { onDelete: 'cascade' }),
   score: decimal('score', { precision: 5, scale: 2 }),
-  comment: text('comment'),
   createdAt: timestamp('created_at').defaultNow().notNull(),
   updatedAt: timestamp('updated_at').defaultNow().notNull()
 })
@@ -232,24 +219,8 @@ export const userRelation = relations(user, ({ one, many }) => ({
     fields: [user.id],
     references: [cv.userId]
   }),
-  sessions: many(session),
-  accounts: many(account),
   jobApplications: many(jobApplication),
   jobOffers: many(jobOffer)
-}))
-
-export const sessionRelation = relations(session, ({ one }) => ({
-  user: one(user, {
-    fields: [session.userId],
-    references: [user.id]
-  })
-}))
-
-export const accountRelation = relations(account, ({ one }) => ({
-  user: one(user, {
-    fields: [account.userId],
-    references: [user.id]
-  })
 }))
 
 export const cvRelation = relations(cv, ({ one, many }) => ({
@@ -292,49 +263,36 @@ export const jobBenefitRelation = relations(jobBenefit, ({ one }) => ({
   })
 }))
 
-export const jobApplicationRelation = relations(
-  jobApplication,
-  ({ one, many }) => ({
-    user: one(user, {
-      fields: [jobApplication.userId],
-      references: [user.id]
-    }),
-    jobOffer: one(jobOffer, {
-      fields: [jobApplication.jobOfferId],
-      references: [jobOffer.id]
-    }),
-    cv: one(cv, {
-      fields: [jobApplication.cvId],
-      references: [cv.id]
-    }),
-    interviews: many(interview)
+export const jobApplicationRelation = relations(jobApplication, ({ one }) => ({
+  user: one(user, {
+    fields: [jobApplication.userId],
+    references: [user.id]
+  }),
+  jobOffer: one(jobOffer, {
+    fields: [jobApplication.jobOfferId],
+    references: [jobOffer.id]
+  }),
+  cv: one(cv, {
+    fields: [jobApplication.cvId],
+    references: [cv.id]
+  }),
+  interview: one(interview, {
+    fields: [jobApplication.id],
+    references: [interview.jobApplicationId]
   })
-)
+}))
 
 export const interviewRelation = relations(interview, ({ one, many }) => ({
   jobApplication: one(jobApplication, {
     fields: [interview.jobApplicationId],
     references: [jobApplication.id]
   }),
-  evaluations: many(evaluation),
-  results: many(result)
+  evaluations: many(evaluation)
 }))
 
 export const evaluationRelation = relations(evaluation, ({ one }) => ({
   interview: one(interview, {
     fields: [evaluation.interviewId],
-    references: [interview.id]
-  }),
-  results: one(result)
-}))
-
-export const resultRelation = relations(result, ({ one }) => ({
-  evaluation: one(evaluation, {
-    fields: [result.evaluationId],
-    references: [evaluation.id]
-  }),
-  interview: one(interview, {
-    fields: [result.interviewId],
     references: [interview.id]
   })
 }))
