@@ -23,11 +23,11 @@ export const auth = betterAuth({
     schema: {
       ...schema
     }
-  }),
-  session: {
+  })
+  /* session: {
     cookieCache: {
       enabled: true,
-      maxAge: 60 * 60 * 24 * 30 // 30 days
+      maxAge: 5 * 60 // 5 minutes
     }
-  }
+  } */
 })

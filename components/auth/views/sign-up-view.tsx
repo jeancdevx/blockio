@@ -4,6 +4,7 @@ import { useState } from 'react'
 
 import Image from 'next/image'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 
 import { OctagonAlertIcon } from 'lucide-react'
 
@@ -34,6 +35,8 @@ const formSchema = z.object({
 })
 
 export const SignUpView = () => {
+  const router = useRouter()
+
   const [error, setError] = useState<string | null>(null)
   const [isPending, setIsPending] = useState(false)
 
@@ -55,7 +58,10 @@ export const SignUpView = () => {
         name: data.name,
         email: data.email,
         password: data.password,
-        callbackURL: '/empleos'
+        callbackURL: '/empleos',
+        fetchOptions: {
+          onSuccess: () => router.push('/empleos')
+        }
       })
 
       if (error) {
@@ -229,7 +235,7 @@ export const SignUpView = () => {
             </form>
           </Form>
 
-          <div className='relative hidden flex-col items-center justify-center gap-y-4 bg-radial from-emerald-700 to-emerald-900 md:flex'>
+          <div className='from-sidebar-accent to-sidebar relative hidden flex-col items-center justify-center gap-y-4 bg-radial md:flex'>
             <Image src='/logo.svg' alt='Meet AI' width={64} height={64} />
             <p className='text-2xl font-semibold text-white'>BlockIO</p>
           </div>

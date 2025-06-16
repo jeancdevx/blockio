@@ -21,7 +21,6 @@ const main = async () => {
     await db.delete(schema.cv)
     await db.delete(schema.interview)
     await db.delete(schema.evaluation)
-    await db.delete(schema.result)
     await db.delete(schema.area)
 
     console.log('Database reset successfully.')
