@@ -113,7 +113,7 @@ export const verification = pgTable('verification', {
 })
 
 export const cv = pgTable('cv', {
-  id: uuid('id').primaryKey(),
+  id: uuid('id').primaryKey().defaultRandom().defaultRandom(),
   userId: text('user_id')
     .notNull()
     .references(() => user.id, { onDelete: 'cascade' }),
@@ -124,14 +124,14 @@ export const cv = pgTable('cv', {
 })
 
 export const area = pgTable('area', {
-  id: uuid('id').primaryKey(),
+  id: uuid('id').primaryKey().defaultRandom().defaultRandom(),
   name: text('name').notNull(),
   createdAt: timestamp('created_at').defaultNow().notNull(),
   updatedAt: timestamp('updated_at').defaultNow().notNull()
 })
 
 export const jobOffer = pgTable('job_offer', {
-  id: uuid('id').primaryKey(),
+  id: uuid('id').primaryKey().defaultRandom(),
   title: text('title').notNull(),
   description: text('description').notNull(),
   salary: decimal('salary', { precision: 10, scale: 2 }),
@@ -153,7 +153,7 @@ export const jobOffer = pgTable('job_offer', {
 })
 
 export const jobRequirement = pgTable('job_requirement', {
-  id: uuid('id').primaryKey(),
+  id: uuid('id').primaryKey().defaultRandom(),
   jobOfferId: uuid('job_offer_id')
     .notNull()
     .references(() => jobOffer.id, { onDelete: 'cascade' }),
@@ -163,7 +163,7 @@ export const jobRequirement = pgTable('job_requirement', {
 })
 
 export const jobBenefit = pgTable('job_benefit', {
-  id: uuid('id').primaryKey(),
+  id: uuid('id').primaryKey().defaultRandom(),
   jobOfferId: uuid('job_offer_id')
     .notNull()
     .references(() => jobOffer.id, { onDelete: 'cascade' }),
@@ -173,7 +173,7 @@ export const jobBenefit = pgTable('job_benefit', {
 })
 
 export const jobApplication = pgTable('job_application', {
-  id: uuid('id').primaryKey(),
+  id: uuid('id').primaryKey().defaultRandom(),
   jobOfferId: uuid('job_offer_id')
     .notNull()
     .references(() => jobOffer.id, { onDelete: 'cascade' }),
@@ -191,7 +191,7 @@ export const jobApplication = pgTable('job_application', {
 })
 
 export const interview = pgTable('interview', {
-  id: uuid('id').primaryKey(),
+  id: uuid('id').primaryKey().defaultRandom(),
   jobApplicationId: uuid('job_application_id')
     .notNull()
     .references(() => jobApplication.id, { onDelete: 'cascade' }),
@@ -203,7 +203,7 @@ export const interview = pgTable('interview', {
 })
 
 export const evaluation = pgTable('evaluation', {
-  id: uuid('id').primaryKey(),
+  id: uuid('id').primaryKey().defaultRandom(),
   interviewId: uuid('interview_id')
     .notNull()
     .references(() => interview.id, { onDelete: 'cascade' }),
