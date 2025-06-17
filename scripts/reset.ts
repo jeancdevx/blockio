@@ -16,8 +16,6 @@ const main = async () => {
     await db.delete(schema.verification)
     await db.delete(schema.jobOffer)
     await db.delete(schema.jobApplication)
-    await db.delete(schema.jobBenefit)
-    await db.delete(schema.jobRequirement)
     await db.delete(schema.cv)
     await db.delete(schema.interview)
     await db.delete(schema.evaluation)

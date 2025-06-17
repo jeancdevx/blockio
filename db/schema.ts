@@ -59,7 +59,6 @@ export const user = pgTable('user', {
     .$defaultFn(() => false)
     .notNull(),
   image: text('image'),
-  role: userRoleEnum('role').default('postulante').notNull(),
   createdAt: timestamp('created_at')
     .$defaultFn(() => /* @__PURE__ */ new Date())
     .notNull(),
@@ -145,29 +144,20 @@ export const jobOffer = pgTable('job_offer', {
     .references(() => area.id, { onDelete: 'cascade' }),
   expiresAt: timestamp('expires_at').notNull(),
   status: jobOfferStatusEnum('status').notNull(),
-  userId: text('user_id')
-    .notNull()
-    .references(() => user.id, { onDelete: 'cascade' }),
+  requirements: text('requirements').notNull(),
+  benefits: text('benefits').notNull(),
   createdAt: timestamp('created_at').defaultNow().notNull(),
   updatedAt: timestamp('updated_at').defaultNow().notNull()
 })
 
-export const jobRequirement = pgTable('job_requirement', {
+export const evaluation = pgTable('evaluation', {
   id: uuid('id').primaryKey().defaultRandom(),
   jobOfferId: uuid('job_offer_id')
     .notNull()
     .references(() => jobOffer.id, { onDelete: 'cascade' }),
-  requirement: text('requirement').notNull(),
-  createdAt: timestamp('created_at').defaultNow().notNull(),
-  updatedAt: timestamp('updated_at').defaultNow().notNull()
-})
-
-export const jobBenefit = pgTable('job_benefit', {
-  id: uuid('id').primaryKey().defaultRandom(),
-  jobOfferId: uuid('job_offer_id')
-    .notNull()
-    .references(() => jobOffer.id, { onDelete: 'cascade' }),
-  benefit: text('benefit').notNull(),
+  type: evaluationTypeEnum('type').notNull(),
+  weight: decimal('weight', { precision: 5, scale: 2 }),
+  score: decimal('score', { precision: 5, scale: 2 }),
   createdAt: timestamp('created_at').defaultNow().notNull(),
   updatedAt: timestamp('updated_at').defaultNow().notNull()
 })
@@ -184,7 +174,6 @@ export const jobApplication = pgTable('job_application', {
     .notNull()
     .references(() => cv.id, { onDelete: 'cascade' }),
   status: jobApplicationStatusEnum('status').notNull(),
-  cvReviewedAt: timestamp('cv_reviewed_at'),
   isSelected: boolean('is_selected').default(false).notNull(),
   createdAt: timestamp('created_at').defaultNow().notNull(),
   updatedAt: timestamp('updated_at').defaultNow().notNull()
@@ -202,25 +191,12 @@ export const interview = pgTable('interview', {
   updatedAt: timestamp('updated_at').defaultNow().notNull()
 })
 
-export const evaluation = pgTable('evaluation', {
-  id: uuid('id').primaryKey().defaultRandom(),
-  interviewId: uuid('interview_id')
-    .notNull()
-    .references(() => interview.id, { onDelete: 'cascade' }),
-  type: evaluationTypeEnum('type').notNull(),
-  weight: decimal('weight', { precision: 5, scale: 2 }),
-  score: decimal('score', { precision: 5, scale: 2 }),
-  createdAt: timestamp('created_at').defaultNow().notNull(),
-  updatedAt: timestamp('updated_at').defaultNow().notNull()
-})
-
 export const userRelation = relations(user, ({ one, many }) => ({
   cv: one(cv, {
     fields: [user.id],
     references: [cv.userId]
   }),
-  jobApplications: many(jobApplication),
-  jobOffers: many(jobOffer)
+  jobApplications: many(jobApplication)
 }))
 
 export const cvRelation = relations(cv, ({ one, many }) => ({
@@ -236,31 +212,12 @@ export const areaRelation = relations(area, ({ many }) => ({
 }))
 
 export const jobOfferRelation = relations(jobOffer, ({ one, many }) => ({
-  user: one(user, {
-    fields: [jobOffer.userId],
-    references: [user.id]
-  }),
   area: one(area, {
     fields: [jobOffer.areaId],
     references: [area.id]
   }),
-  requirements: many(jobRequirement),
-  benefits: many(jobBenefit),
+  evaluations: many(evaluation),
   applications: many(jobApplication)
-}))
-
-export const jobRequirementRelation = relations(jobRequirement, ({ one }) => ({
-  jobOffer: one(jobOffer, {
-    fields: [jobRequirement.jobOfferId],
-    references: [jobOffer.id]
-  })
-}))
-
-export const jobBenefitRelation = relations(jobBenefit, ({ one }) => ({
-  jobOffer: one(jobOffer, {
-    fields: [jobBenefit.jobOfferId],
-    references: [jobOffer.id]
-  })
 }))
 
 export const jobApplicationRelation = relations(jobApplication, ({ one }) => ({
@@ -282,17 +239,16 @@ export const jobApplicationRelation = relations(jobApplication, ({ one }) => ({
   })
 }))
 
-export const interviewRelation = relations(interview, ({ one, many }) => ({
+export const interviewRelation = relations(interview, ({ one }) => ({
   jobApplication: one(jobApplication, {
     fields: [interview.jobApplicationId],
     references: [jobApplication.id]
-  }),
-  evaluations: many(evaluation)
+  })
 }))
 
 export const evaluationRelation = relations(evaluation, ({ one }) => ({
-  interview: one(interview, {
-    fields: [evaluation.interviewId],
-    references: [interview.id]
+  jobOffer: one(jobOffer, {
+    fields: [evaluation.jobOfferId],
+    references: [jobOffer.id]
   })
 }))
