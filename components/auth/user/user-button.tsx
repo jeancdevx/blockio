@@ -43,7 +43,8 @@ const UserButton = () => {
 
         <PopoverContent className='w-64 px-2 py-2'>
           <Button
-            className='bg-sidebar-accent/10 text-sidebar hover:bg-sidebar-accent/20 w-full text-sm font-medium'
+            variant='outline'
+            className='w-full'
             onClick={() => router.push('/sign-in')}
           >
             Iniciar sesión

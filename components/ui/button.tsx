@@ -23,7 +23,9 @@ const buttonVariants = cva(
         link: 'text-primary underline-offset-4 hover:underline',
         github: 'bg-black text-white shadow-xs hover:bg-black/90',
         google:
-          'bg-white text-black shadow-xs hover:bg-white/90 border border-input'
+          'bg-white text-black shadow-xs hover:bg-white/90 border border-input',
+        ofert:
+          'bg-radial from-sidebar-accent to-sidebar-primary text-sidebar-primary-foreground shadow-xs hover:bg-sidebar-primary/90'
       },
       size: {
         default: 'h-9 px-4 py-2 has-[>svg]:px-3',

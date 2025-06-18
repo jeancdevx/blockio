@@ -4,7 +4,7 @@ interface AreaLayoutProps {
   children?: React.ReactNode
 }
 
-const AreaLayout = ({ children }: AreaLayoutProps) => {
+const RRHHLayout = ({ children }: AreaLayoutProps) => {
   return (
     <>
       <Header />
@@ -14,4 +14,4 @@ const AreaLayout = ({ children }: AreaLayoutProps) => {
   )
 }
 
-export default AreaLayout
+export default RRHHLayout

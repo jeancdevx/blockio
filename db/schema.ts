@@ -1,4 +1,4 @@
-import { relations } from 'drizzle-orm'
+import { relations, sql } from 'drizzle-orm'
 import {
   boolean,
   decimal,
@@ -144,8 +144,14 @@ export const jobOffer = pgTable('job_offer', {
     .references(() => area.id, { onDelete: 'cascade' }),
   expiresAt: timestamp('expires_at').notNull(),
   status: jobOfferStatusEnum('status').notNull(),
-  requirements: text('requirements').notNull(),
-  benefits: text('benefits').notNull(),
+  requirements: text('requirements')
+    .array()
+    .notNull()
+    .default(sql`'{}'::text[]`),
+  benefits: text('benefits')
+    .array()
+    .notNull()
+    .default(sql`'{}'::text[]`),
   createdAt: timestamp('created_at').defaultNow().notNull(),
   updatedAt: timestamp('updated_at').defaultNow().notNull()
 })
