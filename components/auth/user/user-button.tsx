@@ -41,7 +41,7 @@ const UserButton = () => {
           </Button>
         </PopoverTrigger>
 
-        <PopoverContent className='w-64 px-2 py-2'>
+        <PopoverContent align='end' className='w-64 space-y-2 px-2 py-4'>
           <Button
             variant='outline'
             className='w-full'
@@ -50,7 +50,8 @@ const UserButton = () => {
             Iniciar sesión
           </Button>
           <Button
-            className='bg-sidebar-accent text-sidebar-primary-foreground hover:bg-sidebar-accent/90 mt-2 w-full text-sm font-medium'
+            variant='primary'
+            className='w-full'
             onClick={() => router.push('/sign-up')}
           >
             Crear cuenta
@@ -83,6 +84,7 @@ const UserButton = () => {
           <Separator className='w-full' />
 
           <Button
+            variant='destructive'
             className='w-full bg-red-50 text-sm font-medium text-red-800 hover:bg-red-100'
             onClick={handleSignOut}
           >

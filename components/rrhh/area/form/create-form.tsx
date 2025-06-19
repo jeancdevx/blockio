@@ -106,7 +106,7 @@ const CreateForm = () => {
           />
 
           <div className='flex gap-x-4'>
-            <Button type='submit' disabled={isPending}>
+            <Button type='submit' variant='primary' disabled={isPending}>
               {isPending ? 'Creando...' : 'Crear área'}
             </Button>
 

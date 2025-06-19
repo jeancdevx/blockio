@@ -174,7 +174,12 @@ const SignInView = () => {
                   </Alert>
                 )}
 
-                <Button type='submit' className='w-full' disabled={isPending}>
+                <Button
+                  type='submit'
+                  variant='primary'
+                  className='w-full'
+                  disabled={isPending}
+                >
                   {isPending ? 'Iniciando sesión...' : 'Iniciar sesión'}
                 </Button>
 

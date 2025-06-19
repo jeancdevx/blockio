@@ -179,7 +179,7 @@ const UpdateForm = ({ initialData }: UpdateFormProps) => {
           />
 
           <div className='flex gap-x-4'>
-            <Button type='submit' disabled={isPending}>
+            <Button type='submit' variant='primary' disabled={isPending}>
               {isPending ? 'Actualizando...' : 'Actualizar área'}
             </Button>
             <Button

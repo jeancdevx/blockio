@@ -7,7 +7,7 @@ interface HeaderProps {
 
 const Header = ({ children }: HeaderProps) => {
   return (
-    <header className='sticky top-0 z-50 mx-auto flex max-w-6xl items-center justify-between rounded-lg bg-white/85 p-4 backdrop-blur-md lg:top-1'>
+    <header className='sticky top-0 z-50 mx-auto flex max-w-6xl items-center justify-between rounded-lg bg-white/85 p-4 backdrop-blur-md'>
       {/* logo */}
       <Logo />
 

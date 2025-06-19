@@ -188,7 +188,12 @@ export const SignUpView = () => {
                   </Alert>
                 )}
 
-                <Button type='submit' className='w-full' disabled={isPending}>
+                <Button
+                  type='submit'
+                  className='w-full'
+                  variant='primary'
+                  disabled={isPending}
+                >
                   {isPending ? 'Creando cuenta...' : 'Crear cuenta'}
                 </Button>
 
