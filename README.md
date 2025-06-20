@@ -153,3 +153,7 @@
 ### Casos de Uso de Requerimientos
 
 ![Diagrama de Casos de Uso de Requerimientos](./diagrams/use_cases_requirements.png)
+
+### Diagrama de clases
+
+![Diagrama de Clases](./diagrams/classes.png)
