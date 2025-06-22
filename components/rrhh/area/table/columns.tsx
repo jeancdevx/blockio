@@ -71,7 +71,6 @@ export const columns: ColumnDef<typeof area.$inferSelect>[] = [
               onClick={() => {
                 navigator.clipboard.writeText(row.original.name)
                 toast.success('Nombre del área copiado al portapapeles', {
-                  description: row.original.name,
                   duration: 2000
                 })
               }}

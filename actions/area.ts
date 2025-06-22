@@ -36,14 +36,6 @@ export const createArea = async (data: FormData) => {
       } as ActionResult
     }
 
-    if (!isRRHHUser(session.user.email)) {
-      return {
-        success: false,
-        message: 'No tienes permisos para crear áreas',
-        errors: { user: ['No tienes permisos para crear áreas'] }
-      }
-    }
-
     const rawData = {
       name: data.get('name')?.toString().trim() || ''
     }
