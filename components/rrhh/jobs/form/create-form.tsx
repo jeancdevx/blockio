@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useTransition } from 'react'
+import { use, useState, useTransition } from 'react'
 
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
@@ -54,7 +54,7 @@ import {
 import { Textarea } from '@/components/ui/textarea'
 
 interface CreateFormProps {
-  areas: Array<typeof area.$inferSelect>
+  allAreas: Promise<Array<typeof area.$inferSelect>>
 }
 
 const formSchema = z.object({
@@ -85,10 +85,12 @@ const formSchema = z.object({
     .optional()
 })
 
-const CreateForm = ({ areas }: CreateFormProps) => {
+const CreateForm = ({ allAreas }: CreateFormProps) => {
   const router = useRouter()
   const [open, setOpen] = useState(false)
   const [openDatePicker, setOpenDatePicker] = useState(false)
+
+  const areas = use(allAreas)
 
   const [isPending, startTransition] = useTransition()
 
@@ -162,15 +164,6 @@ const CreateForm = ({ areas }: CreateFormProps) => {
 
   return (
     <>
-      <div className='space-y-1'>
-        <h1 className='text-3xl font-semibold md:text-4xl'>
-          Crear Oferta Laboral
-        </h1>
-        <p className='text-muted-foreground text-sm'>
-          Completa el siguiente formulario para crear una nueva oferta laboral.
-        </p>
-      </div>
-
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-6'>
           <div className='grid gap-4 md:grid-cols-3'>
@@ -615,7 +608,7 @@ const CreateForm = ({ areas }: CreateFormProps) => {
                                   }}
                                   disabled={isPending}
                                 >
-                                  <SelectTrigger>
+                                  <SelectTrigger className='w-full'>
                                     <SelectValue placeholder='Selecciona tipo' />
                                   </SelectTrigger>
                                   <SelectContent>
@@ -752,13 +745,12 @@ const CreateForm = ({ areas }: CreateFormProps) => {
             <Button
               type='submit'
               className='w-full md:w-auto'
-              variant='ofert'
               disabled={isPending}
             >
               {isPending ? 'Creando...' : 'Crear Oferta Laboral'}
             </Button>
 
-            <Link href='/rrhh/job-offer' className='w-full' passHref>
+            <Link href='/job-offer' className='w-full' passHref>
               <Button variant='outline' className='w-full' asChild>
                 <span>Cancelar</span>
               </Button>

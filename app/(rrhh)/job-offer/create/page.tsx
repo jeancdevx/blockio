@@ -1,5 +1,9 @@
+import { Suspense } from 'react'
+
 import { headers } from 'next/headers'
 import { redirect } from 'next/navigation'
+
+import { Loader } from 'lucide-react'
 
 import { getAreas } from '@/db/queries'
 import { auth } from '@/lib/auth'
@@ -11,9 +15,30 @@ export default async function JobOfferCreatePage() {
     headers: await headers()
   })
 
-  const areas = await getAreas()
+  const areas = getAreas()
 
   if (!session) redirect('/empleos')
 
-  return <CreateForm areas={areas} />
+  return (
+    <>
+      <div className='space-y-1'>
+        <h1 className='text-3xl font-semibold md:text-4xl'>
+          Crear Oferta Laboral
+        </h1>
+        <p className='text-muted-foreground text-sm'>
+          Completa el siguiente formulario para crear una nueva oferta laboral.
+        </p>
+      </div>
+
+      <Suspense
+        fallback={
+          <div className='text-muted-foreground flex h-96 items-center justify-center text-lg'>
+            <Loader className='size-4 animate-spin' />
+          </div>
+        }
+      >
+        <CreateForm allAreas={areas} />
+      </Suspense>
+    </>
+  )
 }

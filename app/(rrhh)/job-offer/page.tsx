@@ -1,16 +1,19 @@
 import { headers } from 'next/headers'
 import { redirect } from 'next/navigation'
 
+import { getJobOffers } from '@/db/queries'
 import { auth } from '@/lib/auth'
 
-import JobView from '@/components/rrhh/jobs'
+import { JobOfferListView } from '@/components/rrhh/jobs/views'
 
 export default async function JobOfferPage() {
   const session = await auth.api.getSession({
     headers: await headers()
   })
 
-  if (!session) redirect('sign-in')
+  const jobOffers = await getJobOffers()
 
-  return <JobView />
+  if (!session) redirect('/sign-in')
+
+  return <JobOfferListView jobOffers={jobOffers} />
 }
