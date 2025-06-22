@@ -144,19 +144,12 @@ export const jobOffer = pgTable('job_offer', {
     .references(() => area.id, { onDelete: 'cascade' }),
   expiresAt: timestamp('expires_at').notNull(),
   status: jobOfferStatusEnum('status').notNull(),
+  requirements: text('requirements')
+    .array()
+    .default(sql`'{}'::text[]`),
   benefits: text('benefits')
     .array()
     .default(sql`'{}'::text[]`),
-  createdAt: timestamp('created_at').defaultNow().notNull(),
-  updatedAt: timestamp('updated_at').defaultNow().notNull()
-})
-
-export const requirement = pgTable('requeriment', {
-  id: uuid('id').primaryKey().defaultRandom(),
-  jobOfferId: uuid('job_offer_id')
-    .notNull()
-    .references(() => jobOffer.id, { onDelete: 'cascade' }),
-  name: text('name').notNull(),
   createdAt: timestamp('created_at').defaultNow().notNull(),
   updatedAt: timestamp('updated_at').defaultNow().notNull()
 })
@@ -200,16 +193,8 @@ export const jobOfferRelation = relations(jobOffer, ({ one, many }) => ({
     fields: [jobOffer.areaId],
     references: [area.id]
   }),
-  requirements: many(requirement),
   evaluations: many(evaluation),
   interviews: many(interview)
-}))
-
-export const requirementRelation = relations(requirement, ({ one }) => ({
-  jobOffer: one(jobOffer, {
-    fields: [requirement.jobOfferId],
-    references: [jobOffer.id]
-  })
 }))
 
 export const userRelation = relations(user, ({ one }) => ({
