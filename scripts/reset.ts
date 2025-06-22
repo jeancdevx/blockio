@@ -14,12 +14,12 @@ const main = async () => {
     await db.delete(schema.account)
     await db.delete(schema.session)
     await db.delete(schema.verification)
-    await db.delete(schema.jobOffer)
-    await db.delete(schema.jobApplication)
     await db.delete(schema.cv)
+    await db.delete(schema.area)
+    await db.delete(schema.jobOffer)
+    await db.delete(schema.requirement)
     await db.delete(schema.interview)
     await db.delete(schema.evaluation)
-    await db.delete(schema.area)
 
     console.log('Database reset successfully.')
   } catch (error) {
