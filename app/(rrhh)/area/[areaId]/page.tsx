@@ -1,9 +1,8 @@
 import { headers } from 'next/headers'
-import { redirect } from 'next/navigation'
+import { notFound, redirect } from 'next/navigation'
 
 import { getAreaById } from '@/db/queries'
 import { auth } from '@/lib/auth'
-import { isRRHHUser } from '@/lib/utils'
 
 import UpdateForm from '@/components/rrhh/area/form/update-form'
 
@@ -20,11 +19,22 @@ export default async function AreaIdPage({ params }: AreaPageProps) {
     headers: await headers()
   })
 
+  if (
+    !areaId ||
+    !/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(
+      areaId
+    )
+  )
+    notFound()
+
   const area = await getAreaById(areaId)
 
   if (!session) redirect('/sign-in')
 
-  if (!isRRHHUser(session.user.email)) redirect('/empleos')
+  if (!area) notFound()
+
+  console.log(areaId)
+  console.log('Area:', area)
 
   return <UpdateForm initialData={area} />
 }

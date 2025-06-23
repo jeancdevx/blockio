@@ -74,54 +74,45 @@ const CreateForm = () => {
   }
 
   return (
-    <>
-      <div className='space-y-1'>
-        <h1 className='text-3xl font-semibold md:text-5xl'>Crear nueva área</h1>
-        <p className='text-muted-foreground text-sm'>
-          Crea una nueva area para asignarle ofertas de trabajo.
-        </p>
-      </div>
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(onSubmit)} className='mt-4 space-y-6'>
+        <FormField
+          control={form.control}
+          name='name'
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Nombre del área</FormLabel>
 
-      <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className='mt-4 space-y-6'>
-          <FormField
-            control={form.control}
-            name='name'
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Nombre del área</FormLabel>
+              <FormControl>
+                <Input
+                  placeholder='ej. Recursos Humanos, Ingenieria, Electronica...'
+                  disabled={isPending}
+                  autoFocus
+                  {...field}
+                />
+              </FormControl>
 
-                <FormControl>
-                  <Input
-                    placeholder='ej. Recursos Humanos, Ingenieria, Electronica...'
-                    disabled={isPending}
-                    autoFocus
-                    {...field}
-                  />
-                </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
 
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+        <div className='flex gap-x-4'>
+          <Button type='submit' variant='primary' disabled={isPending}>
+            {isPending ? 'Creando...' : 'Crear área'}
+          </Button>
 
-          <div className='flex gap-x-4'>
-            <Button type='submit' variant='primary' disabled={isPending}>
-              {isPending ? 'Creando...' : 'Crear área'}
-            </Button>
-
-            <Button
-              variant='outline'
-              type='button'
-              disabled={isPending}
-              onClick={() => router.push('/area')}
-            >
-              Cancelar
-            </Button>
-          </div>
-        </form>
-      </Form>
-    </>
+          <Button
+            variant='outline'
+            type='button'
+            disabled={isPending}
+            onClick={() => router.push('/area')}
+          >
+            Cancelar
+          </Button>
+        </div>
+      </form>
+    </Form>
   )
 }
 

@@ -36,8 +36,10 @@ export const createArea = async (data: FormData) => {
       } as ActionResult
     }
 
+    // todo: check if user is RRHH
+
     const rawData = {
-      name: data.get('name')?.toString().trim() || ''
+      name: data.get('name')?.toString().toLowerCase().trim() || ''
     }
 
     const validatedData = areaFormSchema.parse(rawData)

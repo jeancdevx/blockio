@@ -12,5 +12,16 @@ export default async function AreaCreatePage() {
 
   if (!session) redirect('/sign-in')
 
-  return <CreateForm />
+  return (
+    <>
+      <div className='space-y-1'>
+        <h1 className='text-3xl font-semibold md:text-5xl'>Crear nueva área</h1>
+        <p className='text-muted-foreground text-sm'>
+          Crea una nueva area para asignarle ofertas de trabajo.
+        </p>
+      </div>
+
+      <CreateForm />
+    </>
+  )
 }
