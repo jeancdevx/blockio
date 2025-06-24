@@ -1,6 +1,6 @@
 import { cache } from 'react'
 
-import { asc, eq } from 'drizzle-orm'
+import { eq } from 'drizzle-orm'
 
 import { db } from '.'
 import { area, jobOffer } from './schema'
@@ -24,10 +24,8 @@ export const getAreaById = cache(async (id: string) => {
 
 export const getJobOffers = cache(async () => {
   const data = await db.query.jobOffer.findMany({
-    orderBy: [asc(jobOffer.createdAt)],
     with: {
-      area: true,
-      evaluations: true
+      area: true
     }
   })
 

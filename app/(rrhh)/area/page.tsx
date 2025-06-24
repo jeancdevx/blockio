@@ -3,21 +3,20 @@ import { Suspense } from 'react'
 import { headers } from 'next/headers'
 import { redirect } from 'next/navigation'
 
-import { Loader } from 'lucide-react'
-
 import { getAreas } from '@/db/queries'
 import { auth } from '@/lib/auth'
 
 import AreaView from '@/components/rrhh/area'
+import DataTableSkeleton from '@/components/rrhh/area/table/data-table-skeleton'
 
 export default async function AreaPage() {
   const session = await auth.api.getSession({
     headers: await headers()
   })
 
-  const areas = getAreas()
-
   if (!session) redirect('/sign-in')
+
+  const areas = getAreas()
 
   return (
     <>
@@ -30,13 +29,7 @@ export default async function AreaPage() {
         </div>
       </div>
 
-      <Suspense
-        fallback={
-          <div className='text-muted-foreground flex h-96 items-center justify-center text-lg'>
-            <Loader className='size-4 animate-spin' />
-          </div>
-        }
-      >
+      <Suspense fallback={<DataTableSkeleton />}>
         <AreaView areas={areas} />
       </Suspense>
     </>

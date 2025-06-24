@@ -31,7 +31,12 @@ export const columns: ColumnDef<typeof area.$inferSelect>[] = [
           <ArrowUpDown className='ml-2 h-4 w-4' />
         </Button>
       )
-    }
+    },
+    cell: ({ row }) => (
+      <p className='max-w-[100px] overflow-hidden text-sm font-medium text-ellipsis whitespace-nowrap'>
+        {row.getValue('name')}
+      </p>
+    )
   },
   {
     accessorKey: 'createdAt',
@@ -70,9 +75,12 @@ export const columns: ColumnDef<typeof area.$inferSelect>[] = [
               className='flex'
               onClick={() => {
                 navigator.clipboard.writeText(row.original.name)
-                toast.success('Nombre del área copiado al portapapeles', {
-                  duration: 2000
-                })
+                toast.success(
+                  `Área "${row.original.name}" copiada al portapapeles`,
+                  {
+                    duration: 2000
+                  }
+                )
               }}
             >
               <Copy className='mr-2 h-4 w-4' />

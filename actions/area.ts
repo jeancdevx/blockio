@@ -9,7 +9,6 @@ import { z } from 'zod'
 import { db } from '@/db'
 import { area } from '@/db/schema'
 import { auth } from '@/lib/auth'
-import { isRRHHUser } from '@/lib/utils'
 
 type ActionResult = {
   success: boolean
@@ -107,16 +106,10 @@ export const updateArea = async (id: string, data: FormData) => {
       } as ActionResult
     }
 
-    if (!isRRHHUser(session.user.email)) {
-      return {
-        success: false,
-        message: 'No tienes permisos para actualizar áreas',
-        errors: { user: ['No tienes permisos para actualizar áreas'] }
-      }
-    }
+    // todo: check if user is RRHH
 
     const rawData = {
-      name: data.get('name')?.toString().trim() || ''
+      name: data.get('name')?.toString().toLowerCase().trim() || ''
     }
 
     const validatedData = areaFormSchema.parse(rawData)
@@ -183,13 +176,7 @@ export const deleteArea = async (id: string) => {
       } as ActionResult
     }
 
-    if (!isRRHHUser(session.user.email)) {
-      return {
-        success: false,
-        message: 'No tienes permisos para eliminar áreas',
-        errors: { user: ['No tienes permisos para eliminar áreas'] }
-      } as ActionResult
-    }
+    // todo: check if user is RRHH
 
     const areaToDelete = await db.query.area.findFirst({
       where: eq(area.id, id)

@@ -19,6 +19,8 @@ export default async function AreaIdPage({ params }: AreaPageProps) {
     headers: await headers()
   })
 
+  if (!session) redirect('/sign-in')
+
   if (
     !areaId ||
     !/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(
@@ -29,12 +31,7 @@ export default async function AreaIdPage({ params }: AreaPageProps) {
 
   const area = await getAreaById(areaId)
 
-  if (!session) redirect('/sign-in')
-
   if (!area) notFound()
-
-  console.log(areaId)
-  console.log('Area:', area)
 
   return <UpdateForm initialData={area} />
 }
