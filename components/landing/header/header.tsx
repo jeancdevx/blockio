@@ -15,9 +15,7 @@ const Header = ({ children }: HeaderProps) => {
       {children}
 
       {/* Auth */}
-      <div className='hidden lg:block'>
-        <UserButton />
-      </div>
+      <UserButton />
     </header>
   )
 }

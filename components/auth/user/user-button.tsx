@@ -28,9 +28,7 @@ const UserButton = () => {
     })
   }
 
-  if (isPending) {
-    return <UserButtonSkeleton />
-  }
+  if (isPending) return <UserButtonSkeleton />
 
   if (!data || !data.user) {
     return (
@@ -62,37 +60,39 @@ const UserButton = () => {
   }
 
   return (
-    <Popover>
-      <PopoverTrigger asChild>
-        <Avatar className='cursor-pointer ring-2 ring-gray-200 transition-all hover:ring-gray-300'>
-          <AvatarImage src={data.user.image || ''} alt={data.user.name} />
-          <AvatarFallback>
-            {data.user.name?.charAt(0).toUpperCase() || 'U'}
-          </AvatarFallback>
-        </Avatar>
-      </PopoverTrigger>
+    <div className='hidden lg:block'>
+      <Popover>
+        <PopoverTrigger asChild>
+          <Avatar className='cursor-pointer ring-2 ring-gray-200 transition-all hover:ring-gray-300'>
+            <AvatarImage src={data.user.image || ''} alt={data.user.name} />
+            <AvatarFallback>
+              {data.user.name?.charAt(0).toUpperCase() || 'U'}
+            </AvatarFallback>
+          </Avatar>
+        </PopoverTrigger>
 
-      <PopoverContent align='end' className='w-64 px-2 py-4'>
-        <div className='flex flex-col items-center justify-center gap-y-4'>
-          <div className='flex flex-col items-center gap-y-1'>
-            <span className='text-sm font-semibold text-gray-800'>
-              {data.user.name}
-            </span>
-            <span className='text-xs'>{data.user.email}</span>
+        <PopoverContent align='end' className='w-64 px-2 py-4'>
+          <div className='flex flex-col items-center justify-center gap-y-4'>
+            <div className='flex flex-col items-center gap-y-1'>
+              <span className='text-sm font-semibold text-gray-800'>
+                {data.user.name}
+              </span>
+              <span className='text-xs'>{data.user.email}</span>
+            </div>
+
+            <Separator className='w-full' />
+
+            <Button
+              variant='destructive'
+              className='w-full bg-red-50 text-sm font-medium text-red-800 hover:bg-red-100'
+              onClick={handleSignOut}
+            >
+              Cerrar sesión
+            </Button>
           </div>
-
-          <Separator className='w-full' />
-
-          <Button
-            variant='destructive'
-            className='w-full bg-red-50 text-sm font-medium text-red-800 hover:bg-red-100'
-            onClick={handleSignOut}
-          >
-            Cerrar sesión
-          </Button>
-        </div>
-      </PopoverContent>
-    </Popover>
+        </PopoverContent>
+      </Popover>
+    </div>
   )
 }
 
