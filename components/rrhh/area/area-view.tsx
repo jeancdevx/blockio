@@ -1,20 +1,12 @@
-'use client'
-
-import { use } from 'react'
-
-import { area } from '@/db/schema'
+import { getAreas } from '@/db/queries'
 
 import { columns } from './table/columns'
 import DataTable from './table/data-table'
 
-interface AreaViewProps {
-  areas: Promise<Array<typeof area.$inferSelect>>
-}
+const AreaView = async () => {
+  const areas = await getAreas()
 
-const AreaView = ({ areas }: AreaViewProps) => {
-  const allAreas = use(areas)
-
-  return <DataTable columns={columns} data={allAreas} />
+  return <DataTable columns={columns} data={areas} />
 }
 
 export default AreaView

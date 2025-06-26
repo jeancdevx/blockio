@@ -7,9 +7,9 @@ import { auth } from '@/lib/auth'
 import UpdateForm from '@/components/rrhh/area/form/update-form'
 
 interface AreaPageProps {
-  params: {
+  params: Promise<{
     areaId: string
-  }
+  }>
 }
 
 export default async function AreaIdPage({ params }: AreaPageProps) {

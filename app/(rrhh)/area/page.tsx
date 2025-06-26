@@ -3,7 +3,6 @@ import { Suspense } from 'react'
 import { headers } from 'next/headers'
 import { redirect } from 'next/navigation'
 
-import { getAreas } from '@/db/queries'
 import { auth } from '@/lib/auth'
 
 import AreaView from '@/components/rrhh/area'
@@ -15,8 +14,6 @@ export default async function AreaPage() {
   })
 
   if (!session) redirect('/sign-in')
-
-  const areas = getAreas()
 
   return (
     <>
@@ -30,7 +27,7 @@ export default async function AreaPage() {
       </div>
 
       <Suspense fallback={<DataTableSkeleton />}>
-        <AreaView areas={areas} />
+        <AreaView />
       </Suspense>
     </>
   )
