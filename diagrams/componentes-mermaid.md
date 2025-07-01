@@ -28,7 +28,7 @@ graph TB
     end
 
     subgraph "Capa de Datos (<<entity>>)"
-        PG[(PostgreSQL DB<br/>(Neon Database)<br/>• Users<br/>• Areas<br/>• Job Offers<br/>• Applications)]
+        PG[PostgreSQL DB<br/>(Neon Database)<br/>• Users<br/>• Areas<br/>• Job Offers<br/>• Applications]
         UT[UploadThing<br/>(File Storage)<br/>• CV Documents<br/>• Profile Images<br/>• Certificates]
         BA[Better Auth<br/>(Authentication)<br/>• User Sessions<br/>• JWT Tokens<br/>• Social Login]
     end
@@ -46,22 +46,22 @@ graph TB
     APS -.->|<<import>>| JS
     APS -.->|<<use>>| NS
     APS -.->|<<depends>>| FS
-    
+
     JS -.->|<<import>>| ARS
     JS -.->|<<depends>>| WS
-    
+
     ES -.->|<<import>>| APS
     ES -.->|<<use>>| CS
     ES -.->|<<depends>>| RS
-    
+
     HS -.->|<<import>>| CS
     HS -.->|<<use>>| NS
     HS -.->|<<depends>>| FS
     HS -.->|<<depends>>| WS
-    
+
     CS -.->|<<import>>| ES
     CS -.->|<<use>>| RS
-    
+
     NS -.->|<<import>>| US
     NS -.->|<<use>>| AS
 
@@ -77,7 +77,7 @@ graph TB
     US -.->|<<depends>> P2 ORM| PG
     RS -.->|<<depends>> P2 ORM| PG
     WS -.->|<<depends>> P2 ORM| PG
-    
+
     FS -.->|<<depends>> P3 REST| UT
     APS -.->|<<depends>> P3 REST| UT
     HS -.->|<<depends>> P3 REST| UT
